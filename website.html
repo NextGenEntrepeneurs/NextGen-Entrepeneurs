@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KnoolNest — Premium Shirts & T‑Shirts</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --black:#000; --white:#fff; --gray:#f6f6f6; --muted:#777; --accent:#e60023; --radius:12px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:var(--white);color:var(--black);line-height:1.6;overflow-x:hidden}
+  a{text-decoration:none;color:inherit}
+  img{display:block;width:100%;height:auto}
+
+  /* Header (hide on scroll) */
+  header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 5%;background:var(--white);border-bottom:1px solid #eee;transition:transform .4s ease}
+  header.hide{transform:translateY(-100%)}
+  .logo{font-family:'Oswald',sans-serif;font-size:1.8rem}
+  nav a{margin-left:28px;font-weight:700;text-transform:uppercase;font-size:.9rem;cursor:pointer}
+  nav a:hover{color:var(--accent)}
+
+  /* Hero */
+  .hero{min-height:72vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--black);color:var(--white);padding:100px 5% 60px}
+  .hero h1{font-family:'Oswald',sans-serif;font-size:3rem;margin-bottom:12px;letter-spacing:0.06em}
+  .hero p{opacity:.9;margin-bottom:22px;font-weight:600}
+  .btn{display:inline-block;padding:12px 24px;border-radius:999px;border:2px solid var(--white);color:var(--white);font-weight:800;text-transform:uppercase;transition:.25s;cursor:pointer}
+  .btn:hover{background:var(--white);color:var(--black)}
+
+  section{padding:60px 5%}
+  .section-title{font-family:'Oswald',sans-serif;font-size:2rem;margin-bottom:18px;letter-spacing:0.05em}
+
+  /* Feature band */
+  #feature-band{background:var(--black);color:var(--white);text-align:center;padding:70px 5%}
+  #feature-band.hidden{display:none}
+  #feature-band .btn{border-color:var(--white)}
+
+  /* Grids */
+  .grid{display:grid;gap:24px}
+  .grid-4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:1000px){.grid-4{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:760px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.grid-4{grid-template-columns:1fr}}
+
+  /* Cards + reveal animation */
+  .card{background:var(--white);border:1px solid #eee;border-radius:var(--radius);overflow:hidden;transform:translateY(18px);opacity:0;transition:transform .5s ease,opacity .5s ease;cursor:pointer;box-shadow:0 0 0 transparent;}
+  .card.visible{transform:translateY(0);opacity:1;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+  .card:hover{box-shadow:0 10px 18px rgba(0,0,0,0.15);}
+  .card .ph{height:320px;background:linear-gradient(135deg,#e9e9e9,#d8d8d8);display:grid;place-items:center;color:#888;font-weight:700;letter-spacing:.08em;font-size:1.25rem;}
+  .card-body{padding:14px}
+  .title{font-weight:700;font-size:1.1rem;letter-spacing:0.02em}
+  .muted{color:var(--muted);font-size:.9rem;margin-top:2px}
+  .price{font-weight:700;margin-top:6px;font-size:1.05rem}
+
+  .more-wrap{text-align:center;margin-top:18px}
+  .more-btn{border:1px solid #ddd;border-radius:999px;background:#fff;padding:12px 18px;font-weight:700;cursor:pointer;transition:background .3s, border-color .3s}
+  .more-btn:hover{border-color:#bbb;background:#f9f9f9}
+
+  /* Ralph-style control bar on Shop All */
+  .controls{position:sticky;top:0;z-index:90;background:var(--white);border-top:1px solid #eee;border-bottom:1px solid #eee;padding:10px 5%;display:flex;gap:16px;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.04);}
+  .controls .left{display:flex;gap:12px;align-items:center;flex:1}
+  .controls .right{display:flex;gap:12px;align-items:center}
+  .select{padding:8px 10px;border:1px solid #ddd;border-radius:8px;background:#fff;font-weight:600;font-size:.95rem;cursor:pointer}
+  .btn-filter{padding:8px 16px;border-radius:8px;border:1px solid #ddd;background:#fff;font-weight:700;cursor:pointer;user-select:none}
+  .btn-filter.active{border-color:#000;background:#eee}
+  .badge{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:999px;background:#000;color:#fff;font-size:.75rem;margin-left:6px;padding:0 6px;font-weight:700}
+
+  /* Filter panel below controls */
+  .filter-panel{display:none;background:#fff;border-bottom:1px solid #eee;padding:14px 5%;gap:18px;align-items:flex-end;flex-wrap:wrap;box-shadow:0 3px 12px rgba(0,0,0,0.06);}
+  .filter-panel.open{display:flex}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:140px}
+  .field label{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#444;}
+  .field select,.field input{padding:10px 12px;border:1px solid #ddd;border-radius:10px;min-width:160px;font-weight:600;letter-spacing:0.04em}
+  .apply{background:#000;color:#fff;border:none;border-radius:10px;padding:10px 20px;font-weight:700;cursor:pointer;letter-spacing:0.05em;transition:background .3s ease;}
+  .apply:hover{background:#222;}
+  .clear{text-decoration:underline;cursor:pointer;margin-left:10px;color:#444;font-weight:600;user-select:none}
+
+  /* Footer */
+  footer{background:var(--black);color:#fff;display:flex;justify-content:space-between;flex-wrap:wrap;padding:30px 5%;font-size:.9rem;letter-spacing:0.05em;}
+  footer small{opacity:.8}
+  footer div a{color:#fff;margin-left:18px;font-weight:600;text-transform:uppercase;cursor:pointer;}
+  footer div a:hover{color:var(--accent);}
+
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="logo">KNOOLNEST</div>
+  <nav>
+    <a href="#men">Men</a>
+    <a href="#women">Women</a>
+    <a href="#kids">Kids</a>
+    <a href="#shopAll" id="shopAllLink">Shop All</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>ALL COLORS. ALL AGES. ALL STYLES.</h1>
+  <p>Premium Shirts &amp; T‑Shirts built for comfort and style.</p>
+  <a href="#shopAll" class="btn" id="heroShopAll">Shop All</a>
+</section>
+
+<section id="categories">
+  <h2 class="section-title">Shop by Category</h2>
+  <div class="grid grid-4">
+    <a class="card"><div class="ph">MEN</div><div class="card-body"><div class="title">Men</div><div class="muted">Shirts &amp; Tees</div></div></a>
+    <a class="card"><div class="ph">WOMEN</div><div class="card-body"><div class="title">Women</div><div class="muted">Shirts &amp; Tees</div></div></a>
+    <a class="card"><div class="ph">KIDS</div><div class="card-body"><div class="title">Kids</div><div class="muted">Shirts &amp; Tees</div></div></a>
+    <a class="card"><div class="ph">NEW</div><div class="card-body"><div class="title">New Arrivals</div><div class="muted">Fresh drops</div></div></a>
+  </div>
+</section>
+
+<section id="feature-band">
+  <h2 class="section-title" style="color:#fff;margin:0 0 8px">Engineered for Performance</h2>
+  <p style="opacity:.9;margin-bottom:18px">Breathable fabrics · Everyday durability</p>
+  <a href="#shopAll" class="btn">Shop Now</a>
+</section>
+
+<!-- MEN -->
+<section id="men">
+  <h2 class="section-title">Men's Collection</h2>
+  <div class="grid grid-4" id="menGrid">
+    <div class="card" data-color="Black" data-size="M" data-price="30"><img src="" alt=""><div class="card-body"><div class="title">Classic Tee — Black</div><div class="muted">Cotton</div><div class="price">$30</div></div></div>
+    <div class="card" data-color="White" data-size="L" data-price="30"><img src="" alt=""><div class="card-body"><div class="title">Classic Tee — White</div><div class="muted">Cotton</div><div class="price">$30</div></div></div>
+    <div class="card" data-color="Blue" data-size="S" data-price="45"><img src="" alt=""><div class="card-body"><div class="title">Button‑Up — Blue</div><div class="muted">Poplin</div><div class="price">$45</div></div></div>
+    <div class="card" data-color="Red" data-size="XL" data-price="40"><img src="" alt=""><div class="card-body"><div class="title">Performance Tee — Red</div><div class="muted">Dri‑fit</div><div class="price">$40</div></div></div>
+  </div>
+  <div class="more-wrap"><button class="more-btn" data-target="menGrid">View 30 more</button></div>
+</section>
+
+<!-- WOMEN -->
+<section id="women">
+  <h2 class="section-title">Women's Collection</h2>
+  <div class="grid grid-4" id="womenGrid">
+    <div class="card" data-color="Black" data-size="S" data-price="28"><img src="" alt=""><div class="card-body"><div class="title">Relaxed Tee — Black</div><div class="muted">Soft Touch</div><div class="price">$28</div></div></div>
+    <div class="card" data-color="White" data-size="M" data-price="28"><img src="" alt=""><div class="card-body"><div class="title">Relaxed Tee — White</div><div class="muted">Soft Touch</div><div class="price">$28</div></div></div>
+    <div class="card" data-color="Blue" data-size="L" data-price="42"><img src="" alt=""><div class="card-body"><div class="title">Everyday Shirt — Blue</div><div class="muted">Cotton</div><div class="price">$42</div></div></div>
+    <div class="card" data-color="Red" data-size="M" data-price="29"><img src="" alt=""><div class="card-body"><div class="title">Crop Tee — Red</div><div class="muted">Stretch</div><div class="price">$29</div></div></div>
+  </div>
+  <div class="more-wrap"><button class="more-btn" data-target="womenGrid">View 30 more</button></div>
+</section>
+
+<!-- KIDS -->
+<section id="kids">
+  <h2 class="section-title">Kids' Collection</h2>
+  <div class="grid grid-4" id="kidsGrid">
+    <div class="card" data-color="Blue" data-size="M" data-price="20"><img src="" alt=""><div class="card-body"><div class="title">Kids Tee — Blue</div><div class="muted">Cotton</div><div class="price">$20</div></div></div>
+    <div class="card" data-color="Red" data-size="S" data-price="20"><img src="" alt=""><div class="card-body"><div class="title">Kids Tee — Red</div><div class="muted">Cotton</div><div class="price">$20</div></div></div>
+    <div class="card" data-color="Black" data-size="L" data-price="28"><img src="" alt=""><div class="card-body"><div class="title">Kids Shirt — Black</div><div class="muted">Cotton</div><div class="price">$28</div></div></div>
+    <div class="card" data-color="Green" data-size="M" data-price="29"><img src="" alt=""><div class="card-body"><div class="title">Kids Tee — Green</div><div class="muted">Cotton</div><div class="price">$29</div></div></div>
+  </div>
+  <div class="more-wrap"><button class="more-btn" data-target="kidsGrid">View 30 more</button></div>
+</section>
+
+<!-- SHOP ALL -->
+<section id="shopAll">
+  <h2 class="section-title">Shop All</h2>
+
+  <div class="controls" id="controls">
+    <div class="left">
+      <select id="sortSelect" class="select" title="Sort Products">
+        <option value="featured">Sort: Featured</option>
+        <option value="priceAsc">Price: Low to High</option>
+        <option value="priceDesc">Price: High to Low</option>
+      </select>
+      <div id="resultsText" class="muted" aria-live="polite">Loading…</div>
+    </div>
+    <div class="right">
+      <button class="btn-filter" id="filterToggle" aria-expanded="false" aria-controls="filterPanel" aria-label="Toggle Filters">Filter <span id="filterCount" class="badge" style="display:none">0</span></button>
+    </div>
+  </div>
+
+  <div class="filter-panel" id="filterPanel" aria-hidden="true">
+    <div class="field">
+      <label for="sizeAll">Size</label>
+      <select id="sizeAll" aria-label="Filter by Size">
+        <option value="">All</option><option>S</option><option>M</option><option>L</option><option>XL</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="colorAll">Color</label>
+      <select id="colorAll" aria-label="Filter by Color">
+        <option value="">All</option><option>Black</option><option>White</option><option>Red</option><option>Blue</option><option>Green</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="minAll">Min $</label>
+      <input id="minAll" type="number" min="0" step="1" placeholder="0" aria-label="Minimum Price">
+    </div>
+    <div class="field">
+      <label for="maxAll">Max $</label>
+      <input id="maxAll" type="number" min="0" step="1" placeholder="100" aria-label="Maximum Price">
+    </div>
+    <button class="apply" id="applyFilters" aria-label="Apply Filters">Apply</button>
+    <span class="clear" id="clearFilters" tabindex="0" role="button" aria-label="Clear Filters">Clear</span>
+  </div>
+
+  <div class="grid grid-4" id="shopAllGrid" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="more-wrap"><button class="more-btn" id="shopAllMore">View 30 more</button></div>
+</section>
+
+<footer>
+  <small>© <span id="year"></span> KnoolNest. All Rights Reserved.</small>
+  <div><a href="#men">Men</a> <a href="#women">Women</a> <a href="#kids">Kids</a></div>
+</footer>
+
+<script>
+  // Year update
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Header hide/reveal on scroll
+  let lastY = 0; 
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > lastY && y > 80) header.classList.add('hide');
+    else header.classList.remove('hide');
+    lastY = y;
+  });
+
+  // Placeholder image data URI
+  const phData = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect width="100%" height="100%" fill="#e5e5e5"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#888" font-family="Arial" font-size="28">KnoolNest Image</text></svg>`);
+
+  function ensurePlaceholders(root = document) {
+    root.querySelectorAll('img').forEach(img => {
+      if (!img.getAttribute('src')) img.setAttribute('src', phData);
+    });
+  }
+
+  // Intersection observer for reveal animations
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+
+  function observeCards(container) {
+    container.querySelectorAll('.card').forEach(card => io.observe(card));
+  }
+
+  // Initialize placeholders and reveal animations on initial cards
+  ['menGrid', 'womenGrid', 'kidsGrid'].forEach(id => {
+    const container = document.getElementById(id);
+    ensurePlaceholders(container);
+    observeCards(container);
+  });
+
+  // Utilities for filtering and sorting
+  function cardMatchesFilter(card, filters) {
+    const size = filters.size;
+    const color = filters.color;
+    const min = filters.minPrice;
+    const max = filters.maxPrice;
+
+    const cardSize = card.dataset.size;
+    const cardColor = card.dataset.color;
+    const cardPrice = parseFloat(card.dataset.price);
+
+    if (size && cardSize !== size) return false;
+    if (color && cardColor !== color) return false;
+    if (!isNaN(min) && cardPrice < min) return false;
+    if (!isNaN(max) && cardPrice > max) return false;
+
+    return true;
+  }
+
+  // Sorting comparator
+  function sortCards(cards, sortKey) {
+    const sorted = [...cards];
+    if (sortKey === 'priceAsc') {
+      sorted.sort((a,b) => parseFloat(a.dataset.price) - parseFloat(b.dataset.price));
+    } else if (sortKey === 'priceDesc') {
+      sorted.sort((a,b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
+    }
+    // else featured = keep original order
+    return sorted;
+  }
+
+  // Data arrays to generate unique cards on "View 30 more"
+  // Basic template data for generating unique cards
+  const baseData = {
+    men: [
+      {title:'Classic Tee', colors:['Black','White','Blue','Red'], sizes:['S','M','L','XL'], prices:[30,35,40,45], desc:'Cotton'},
+      {title:'Button-Up', colors:['White','Blue','Gray'], sizes:['S','M','L'], prices:[45,50,55], desc:'Poplin'},
+      {title:'Performance Tee', colors:['Red','Black','White'], sizes:['M','L','XL'], prices:[40,45,50], desc:'Dri-fit'}
+    ],
+    women: [
+      {title:'Relaxed Tee', colors:['Black','White','Pink','Red'], sizes:['S','M','L'], prices:[28,32,36], desc:'Soft Touch'},
+      {title:'Everyday Shirt', colors:['Blue','White','Gray'], sizes:['M','L'], prices:[42,48], desc:'Cotton'},
+      {title:'Crop Tee', colors:['Red','Black'], sizes:['S','M'], prices:[29,35], desc:'Stretch'}
+    ],
+    kids: [
+      {title:'Kids Tee', colors:['Blue','Red','Green','Yellow'], sizes:['S','M','L'], prices:[20,22,24], desc:'Cotton'},
+      {title:'Kids Shirt', colors:['Black','White'], sizes:['M','L'], prices:[28,30], desc:'Cotton'}
+    ]
+  };
+
+  // Keep track of how many extra cards loaded for each category
+  const loadCount = { men: 0, women: 0, kids: 0 };
+
+  function createCard(data, uniqueId) {
+    // Create card element
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.dataset.color = data.color;
+    div.dataset.size = data.size;
+    div.dataset.price = data.price;
+    div.setAttribute('tabindex','0');
+    // Image (empty src for now)
+    const img = document.createElement('img');
+    img.alt = `${data.title} — ${data.color}`;
+    img.src = ''; // blank, will be placeholder
+    div.appendChild(img);
+
+    // Card body
+    const body = document.createElement('div');
+    body.className = 'card-body';
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = `${data.title} — ${data.color}`;
+    body.appendChild(title);
+    const desc = document.createElement('div');
+    desc.className = 'muted';
+    desc.textContent = data.desc;
+    body.appendChild(desc);
+    const price = document.createElement('div');
+    price.className = 'price';
+    price.textContent = `$${data.price}`;
+    body.appendChild(price);
+
+    div.appendChild(body);
+
+    ensurePlaceholders(div);
+    io.observe(div);
+
+    return div;
+  }
+
+  // "View 30 more" button handler for men/women/kids
+  document.querySelectorAll('.more-btn[data-target]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target;
+      const container = document.getElementById(target);
+      if (!container) return;
+
+      // Determine category
+      let cat;
+      if (target === 'menGrid') cat = 'men';
+      else if (target === 'womenGrid') cat = 'women';
+      else if (target === 'kidsGrid') cat = 'kids';
+      else return;
+
+      // Add 30 more unique cards for that category
+      for(let i=0; i<30; i++) {
+        // Cycle through baseData to pick a random product template
+        const product = baseData[cat][Math.floor(Math.random()*baseData[cat].length)];
+
+        // Random color, size, price from product arrays
+        const color = product.colors[Math.floor(Math.random()*product.colors.length)];
+        const size = product.sizes[Math.floor(Math.random()*product.sizes.length)];
+        const price = product.prices[Math.floor(Math.random()*product.prices.length)];
+
+        const cardData = {
+          title: product.title,
+          color: color,
+          size: size,
+          price: price,
+          desc: product.desc
+        };
+
+        const card = createCard(cardData, loadCount[cat] + i);
+        container.appendChild(card);
+      }
+      loadCount[cat] += 30;
+      updateShopAllFromGrids();
+    });
+  });
+
+  // SHOP ALL section logic
+  const shopAllGrid = document.getElementById('shopAllGrid');
+  const resultsText = document.getElementById('resultsText');
+  const filterToggle = document.getElementById('filterToggle');
+  const filterPanel = document.getElementById('filterPanel');
+  const filterCountBadge = document.getElementById('filterCount');
+
+  // Filters state
+  let filters = {
+    size: '',
+    color: '',
+    minPrice: NaN,
+    maxPrice: NaN
+  };
+
+  // Sort state
+  let sortKey = 'featured';
+
+  // Generate shopAll cards from men/women/kids grids
+  function updateShopAllFromGrids() {
+    // Clear existing cards
+    shopAllGrid.innerHTML = '';
+
+    // Gather all cards from men, women, kids
+    const menCards = Array.from(document.getElementById('menGrid').children);
+    const womenCards = Array.from(document.getElementById('womenGrid').children);
+    const kidsCards = Array.from(document.getElementById('kidsGrid').children);
+
+    const allCards = [...menCards, ...womenCards, ...kidsCards];
+
+    // Clone each card for ShopAllGrid
+    allCards.forEach(card => {
+      const clone = card.cloneNode(true);
+      clone.classList.remove('visible'); // hide for reveal animation
+      shopAllGrid.appendChild(clone);
+    });
+
+    // Apply filters and sort
+    applyFiltersAndSort();
+
+    // Update results count
+    updateResultsText();
+
+    // Reveal cards
+    observeCards(shopAllGrid);
+
+    // Make sure images have placeholders
+    ensurePlaceholders(shopAllGrid);
+
+    // Show feature band on categories page but hide when Shop All is shown
+    const featureBand = document.getElementById('feature-band');
+    featureBand.classList.add('hidden');
+  }
+
+  // Apply filter & sort to shopAllGrid cards
+  function applyFiltersAndSort() {
+    let cards = Array.from(shopAllGrid.children);
+    cards.forEach(card => {
+      if(cardMatchesFilter(card, filters)){
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Sort visible cards
+    const visibleCards = cards.filter(c => c.style.display !== 'none');
+    const sortedCards = sortCards(visibleCards, sortKey);
+
+    // Reorder in DOM to reflect sorting
+    sortedCards.forEach(card => shopAllGrid.appendChild(card));
+  }
+
+  // Update results text based on visible cards count
+  function updateResultsText() {
+    const cards = Array.from(shopAllGrid.children);
+    const visibleCount = cards.filter(c => c.style.display !== 'none').length;
+    resultsText.textContent = `${visibleCount} Products`;
+  }
+
+  // Show Shop All section and hide others + feature band
+  function showShopAll() {
+    document.getElementById('men').style.display = 'none';
+    document.getElementById('women').style.display = 'none';
+    document.getElementById('kids').style.display = 'none';
+    document.getElementById('categories').style.display = 'none';
+    document.getElementById('feature-band').classList.add('hidden');
+    document.getElementById('shopAll').style.display = 'block';
+    header.classList.remove('hide');
+
+    updateShopAllFromGrids();
+
+    // Scroll to Shop All top
+    window.scrollTo({top: document.getElementById('shopAll').offsetTop - 80, behavior:'smooth'});
+  }
+
+  // Show categories & feature band, hide Shop All
+  function showCategories() {
+    document.getElementById('men').style.display = '';
+    document.getElementById('women').style.display = '';
+    document.getElementById('kids').style.display = '';
+    document.getElementById('categories').style.display = '';
+    document.getElementById('feature-band').classList.remove('hidden');
+    document.getElementById('shopAll').style.display = 'none';
+  }
+
+  // On page load show categories by default
+  showCategories();
+
+  // Navigation event listeners
+  document.getElementById('shopAllLink').addEventListener('click', e => {
+    e.preventDefault();
+    showShopAll();
+  });
+  document.getElementById('heroShopAll').addEventListener('click', e => {
+    e.preventDefault();
+    showShopAll();
+  });
+
+  // Filter panel toggle
+  filterToggle.addEventListener('click', () => {
+    const isOpen = filterPanel.classList.toggle('open');
+    filterToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    filterPanel.setAttribute('aria-hidden', !isOpen);
+  });
+
+  // Apply filters button
+  document.getElementById('applyFilters').addEventListener('click', () => {
+    // Read filter values
+    filters.size = document.getElementById('sizeAll').value;
+    filters.color = document.getElementById('colorAll').value;
+    filters.minPrice = parseFloat(document.getElementById('minAll').value);
+    filters.maxPrice = parseFloat(document.getElementById('maxAll').value);
+
+    // Fix NaN to undefined
+    if (isNaN(filters.minPrice)) filters.minPrice = NaN;
+    if (isNaN(filters.maxPrice)) filters.maxPrice = NaN;
+
+    // Apply filters and update UI
+    applyFiltersAndSort();
+    updateResultsText();
+
+    // Count active filters for badge
+    let count = 0;
+    if(filters.size) count++;
+    if(filters.color) count++;
+    if(!isNaN(filters.minPrice)) count++;
+    if(!isNaN(filters.maxPrice)) count++;
+
+    if(count > 0) {
+      filterCountBadge.style.display = 'inline-flex';
+      filterCountBadge.textContent = count;
+      filterToggle.classList.add('active');
+    } else {
+      filterCountBadge.style.display = 'none';
+      filterToggle.classList.remove('active');
+    }
+  });
+
+  // Clear filters
+  document.getElementById('clearFilters').addEventListener('click', () => {
+    document.getElementById('sizeAll').value = '';
+    document.getElementById('colorAll').value = '';
+    document.getElementById('minAll').value = '';
+    document.getElementById('maxAll').value = '';
+
+    filters = { size:'', color:'', minPrice: NaN, maxPrice: NaN };
+    applyFiltersAndSort();
+    updateResultsText();
+    filterCountBadge.style.display = 'none';
+    filterToggle.classList.remove('active');
+  });
+
+  // Sort select change
+  document.getElementById('sortSelect').addEventListener('change', (e) => {
+    sortKey = e.target.value;
+    applyFiltersAndSort();
+  });
+
+  // Shop All "View 30 more" button (adds new unique cards)
+  const shopAllMoreBtn = document.getElementById('shopAllMore');
+  let shopAllLoadCount = 0;
+
+  shopAllMoreBtn.addEventListener('click', () => {
+    // We'll randomly add cards from men/women/kids baseData
+    const categories = ['men','women','kids'];
+
+    for(let i=0; i<30; i++) {
+      const cat = categories[Math.floor(Math.random()*categories.length)];
+      const product = baseData[cat][Math.floor(Math.random()*baseData[cat].length)];
+      const color = product.colors[Math.floor(Math.random()*product.colors.length)];
+      const size = product.sizes[Math.floor(Math.random()*product.sizes.length)];
+      const price = product.prices[Math.floor(Math.random()*product.prices.length)];
+
+      const cardData = {
+        title: product.title,
+        color: color,
+        size: size,
+        price: price,
+        desc: product.desc
+      };
+
+      const card = createCard(cardData, shopAllLoadCount + i);
+      shopAllGrid.appendChild(card);
+    }
+    shopAllLoadCount += 30;
+
+    // Apply current filters & sort to new cards
+    applyFiltersAndSort();
+    updateResultsText();
+  });
+
+  // On initial page load, set shopAll display none
+  document.getElementById('shopAll').style.display = 'none';
+
+</script>
+
+</body>
+</html>
