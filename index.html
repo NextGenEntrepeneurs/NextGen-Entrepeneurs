@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Youth Tech Labs</title>
+  <title>NextGen Entrepreneurs</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* ====== GENERAL STYLES ====== */
+    /* ===== GENERAL STYLES ===== */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Montserrat', sans-serif;
       margin: 0;
       padding: 0;
       background: #f4f4f9;
@@ -16,88 +18,152 @@
     h1, h2, h3 {
       margin: 0.5rem 0;
     }
-    section {
-      padding: 2rem;
+    a {
+      text-decoration: none;
+      color: inherit;
     }
+    section {
+      padding: 60px 20px;
+    }
+
+    /* ===== HEADER ===== */
     header {
       background: #1a73e8;
-      color: #fff;
+      color: white;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
       text-align: center;
-      padding: 1rem;
+    }
+    header h1 {
+      margin-bottom: 10px;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
     }
     nav a {
-      margin: 0 15px;
-      color: #fff;
-      text-decoration: none;
-      font-weight: bold;
+      font-weight: 700;
+      color: white;
+      transition: 0.3s;
     }
     nav a:hover {
       text-decoration: underline;
     }
 
-    /* ====== HERO SECTION ====== */
+    /* ===== HERO ===== */
     #hero {
       text-align: center;
-      padding: 3rem 1rem;
-      background: linear-gradient(120deg, #e0f7fa, #b2ebf2);
+      padding: 120px 20px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+    }
+    #hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    #hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
     }
     #hero button {
-      background: #1a73e8;
-      color: #fff;
+      background: #ffb400;
+      color: #1a1a1a;
       border: none;
       padding: 15px 30px;
-      font-size: 1rem;
+      font-size: 1.1rem;
       cursor: pointer;
-      margin-top: 1rem;
-      border-radius: 5px;
+      border-radius: 8px;
+      transition: 0.3s;
     }
     #hero button:hover {
-      background: #155ab6;
+      background: #e6a500;
     }
 
-    /* ====== PROGRAM & ABOUT ====== */
-    ul {
-      list-style-type: square;
-      padding-left: 20px;
+    /* ===== ABOUT ===== */
+    #about {
+      text-align: center;
+      max-width: 900px;
+      margin: auto;
     }
 
-    /* ====== FORM ====== */
-    form input, form textarea {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
+    /* ===== PROGRAM CARDS ===== */
+    #program .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .card h3 {
+      color: #1a73e8;
+      margin-bottom: 10px;
+    }
+
+    /* ===== APPLY FORM ===== */
+    #apply form {
+      max-width: 500px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    #apply input, #apply textarea {
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
       font-size: 1rem;
     }
-    form button {
+    #apply button {
+      padding: 15px;
       background: #1a73e8;
-      color: #fff;
+      color: white;
       border: none;
-      padding: 10px 20px;
+      font-size: 1.1rem;
+      border-radius: 8px;
       cursor: pointer;
-      border-radius: 5px;
-      font-size: 1rem;
+      transition: 0.3s;
     }
-    form button:hover {
+    #apply button:hover {
       background: #155ab6;
     }
 
-    /* ====== FOOTER ====== */
+    /* ===== CONTACT ===== */
+    #contact {
+      text-align: center;
+    }
+    #contact a {
+      color: #1a73e8;
+      font-weight: 700;
+      margin: 0 10px;
+    }
+
+    /* ===== FOOTER ===== */
     footer {
       text-align: center;
       background: #1a73e8;
-      color: #fff;
-      padding: 1rem;
+      color: white;
+      padding: 20px 0;
     }
 
-    /* ====== RESPONSIVE ====== */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 600px) {
-      nav a {
-        display: block;
-        margin: 5px 0;
+      #hero h2 {
+        font-size: 2rem;
       }
     }
   </style>
@@ -106,7 +172,7 @@
 
   <!-- HEADER -->
   <header>
-    <h1>Youth Tech Labs</h1>
+    <h1>NextGen Entrepreneurs</h1>
     <nav>
       <a href="#about">About</a>
       <a href="#program">Program</a>
@@ -118,27 +184,42 @@
   <!-- HERO -->
   <section id="hero">
     <h2>Empowering the Next Generation of Innovators</h2>
-    <p>Join our 5-session program blending entrepreneurship, mentorship, and a Shark Tank-style pitch competition.</p>
+    <p>Join our 5-session program blending entrepreneurship, mentorship, and a Shark Tank-style pitch competition hosted by NextGen Entrepreneurs.</p>
     <button id="applyBtn">Apply Now</button>
   </section>
 
   <!-- ABOUT -->
   <section id="about">
-    <h2>About Us</h2>
-    <p>Youth Tech Labs empowers youth with skills, mindset, and tools to understand, build with, and lead the future of innovation. Our mission is to give youth the confidence and guidance to create real-world solutions and startups.</p>
+    <h2>About NextGen Entrepreneurs</h2>
+    <p>NextGen Entrepreneurs empowers youth with the skills, mindset, and tools to understand, build with, and lead the future of innovation. Our mission is to give youth the confidence and guidance to create real-world solutions and startups.</p>
   </section>
 
   <!-- PROGRAM -->
   <section id="program">
     <h2>Program Overview</h2>
-    <ul>
-      <li>Session 1: Introduction to Entrepreneurship & Tech</li>
-      <li>Session 2: Business Model Development</li>
-      <li>Session 3: Marketing & Branding Strategies</li>
-      <li>Session 4: Financial Planning & Fundraising</li>
-      <li>Session 5: Leadership & Pitch Preparation</li>
-    </ul>
-    <p><strong>Finale:</strong> Shark Tank-style Pitch Competition with judges, prizes, and mentorship opportunities.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>Session 1</h3>
+        <p>Introduction to Entrepreneurship & Technology</p>
+      </div>
+      <div class="card">
+        <h3>Session 2</h3>
+        <p>Business Model Development</p>
+      </div>
+      <div class="card">
+        <h3>Session 3</h3>
+        <p>Marketing & Branding Strategies</p>
+      </div>
+      <div class="card">
+        <h3>Session 4</h3>
+        <p>Financial Planning & Fundraising</p>
+      </div>
+      <div class="card">
+        <h3>Session 5</h3>
+        <p>Leadership & Pitch Preparation</p>
+      </div>
+    </div>
+    <p style="text-align:center; margin-top:20px;"><strong>Finale:</strong> Shark Tank-style Pitch Competition with judges, prizes, and mentorship opportunities.</p>
   </section>
 
   <!-- APPLY -->
@@ -155,14 +236,14 @@
   <!-- CONTACT -->
   <section id="contact">
     <h2>Contact Us</h2>
-    <p>Email: info@youthtechlabs.org</p>
+    <p>Email: info@nextgenentrepreneurs.org</p>
     <p>Location: Waterloo, Ontario</p>
-    <p>Follow us on social media: <a href="#">Instagram</a> | <a href="#">LinkedIn</a></p>
+    <p>Follow us: <a href="#">Instagram</a> | <a href="#">LinkedIn</a></p>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <p>© 2025 Youth Tech Labs</p>
+    <p>© 2025 NextGen Entrepreneurs</p>
   </footer>
 
   <!-- JAVASCRIPT -->
@@ -172,15 +253,13 @@
       document.getElementById("apply").scrollIntoView({ behavior: "smooth" });
     });
 
-    // Simple form submission
+    // Simple form submission alert
     document.getElementById("applicationForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      alert("Thank you for applying! We'll contact you soon.");
-      // Optionally, reset the form
+      alert("Thanks for applying! We'll contact you soon.");
       this.reset();
     });
   </script>
 
 </body>
 </html>
-
